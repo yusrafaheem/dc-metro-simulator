@@ -1,3 +1,4 @@
+
 public class EndStation extends Station {
 
     public EndStation(String line, String name) {
@@ -5,17 +6,19 @@ public class EndStation extends Station {
     }
 
     public void makeEnd() {
-        if (prev != null) {
-            next = prev;
-        } else if (next != null) {
-            prev = next;
+        if (this.next != null) {
+            this.prev = this.next;
+        } else if (this.prev != null) {
+            this.next = this.prev;
         }
+        // If both are null, do nothing
     }
 
+    @Override
     public String toString() {
         String prevName = (prev == null) ? "none" : prev.name;
         String nextName = (next == null) ? "none" : next.name;
-        String status = inService ? "true" : "false";
-        return "ENDSTATION " + name + ": " + line + " line, in service: " + status + ", previous station: " + prevName + ", next station: " + nextName;
+        return String.format("ENDSTATION %s: %s line, in service: %s, previous station: %s, next station: %s",
+            name, line, inService, prevName, nextName);
     }
 }
