@@ -196,5 +196,7 @@ public class Lab8Tester {
     assertEquals(expected, next.toString());
 
     next = next.next;
-    expected = "STATION Farragut West: orange line, in service: true, previous station: Foggy
+    expected = "STATION Farragut West: orange line, in service: true, previous station: Foggy Bottom, next station: McPherson Square";
+
+   
 
