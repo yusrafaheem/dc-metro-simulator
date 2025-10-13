@@ -1,4 +1,4 @@
-// Station.java
+import java.util.*;
 
 public class Station {
     protected String line;
@@ -15,18 +15,22 @@ public class Station {
         this.next = null;
     }
 
-    public void addNext(Station nextStation) {
-        this.next = nextStation;
-        if (nextStation != null) {
-            nextStation.prev = this;
+    public void addNext(Station s) {
+        this.next = s;
+        if (s != null) {
+            s.prev = this;
         }
     }
 
-    public void addPrev(Station prevStation) {
-        this.prev = prevStation;
-        if (prevStation != null) {
-            prevStation.next = this;
+    public void addPrev(Station s) {
+        this.prev = s;
+        if (s != null) {
+            s.next = this;
         }
+    }
+
+    public void connect(Station s) {
+        this.addNext(s);
     }
 
     public boolean isAvailable() {
@@ -37,64 +41,62 @@ public class Station {
         inService = !inService;
     }
 
-    public void connect(Station other) {
-        // Connect current station's next to other, and other's prev to current
-        this.next = other;
-        if (other != null) {
-            other.prev = this;
-        }
-    }
-
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (!(obj instanceof Station)) return false;
-        Station other = (Station) obj;
-        return this.line.equals(other.line) && this.name.equals(other.name);
-    }
-
     public String toString() {
         String prevName = (prev == null) ? "none" : prev.name;
         String nextName = (next == null) ? "none" : next.name;
-        return String.format("STATION %s: %s line, in service: %s, previous station: %s, next station: %s",
-            name, line, inService, prevName, nextName);
+        return "STATION " + name + ": " + line + " line, in service: " + inService + ", previous station: " + prevName + ", next station: " + nextName;
     }
 
-    public int tripLength(Station destination) {
-        // Default: use BFS to find shortest path, but test expects small trips only so linear is enough
-        // We'll implement BFS to handle transfers later
-        if (this.equals(destination)) return 0;
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) return false;
+        if (!(other instanceof Station)) return false;
+        Station s = (Station) other;
+        return this.name.equals(s.name) && this.line.equals(s.line);
+    }
 
-        java.util.Queue<Station> queue = new java.util.LinkedList<>();
-        java.util.Set<Station> visited = new java.util.HashSet<>();
-
-        queue.add(this);
-        visited.add(this);
-
-        java.util.Map<Station, Integer> distance = new java.util.HashMap<>();
-        distance.put(this, 0);
-
-        while (!queue.isEmpty()) {
-            Station current = queue.poll();
-            int dist = distance.get(current);
-
-            if (current.equals(destination)) {
-                return dist;
-            }
-
-            if (current.next != null && !visited.contains(current.next)) {
-                queue.add(current.next);
-                visited.add(current.next);
-                distance.put(current.next, dist + 1);
-            }
-            if (current.prev != null && !visited.contains(current.prev)) {
-                queue.add(current.prev);
-                visited.add(current.prev);
-                distance.put(current.prev, dist + 1);
-            }
-
-            // TransferStation subclass will override tripLength for transfers
+    // Recursive tripLength method without helper and no queues
+    public int tripLength(Station dest) {
+        if (this.equals(dest)) {
+            return 0;
         }
-        return -1; // Not reachable
+        Set<Station> visited = new HashSet<>();
+        visited.add(this);
+        return tripLengthHelper(dest, visited);
+    }
+
+    // Helper used internally but private, no change to original interface
+    private int tripLengthHelper(Station dest, Set<Station> visited) {
+        if (this.equals(dest)) {
+            return 0;
+        }
+
+        int minDist = Integer.MAX_VALUE;
+
+        // Check next station
+        if (next != null && !visited.contains(next)) {
+            visited.add(next);
+            int dist = next.tripLengthHelper(dest, visited);
+            if (dist >= 0 && dist < minDist) {
+                minDist = dist + 1;
+            }
+            visited.remove(next);
+        }
+
+        // Check prev station
+        if (prev != null && !visited.contains(prev)) {
+            visited.add(prev);
+            int dist = prev.tripLengthHelper(dest, visited);
+            if (dist >= 0 && dist < minDist) {
+                minDist = dist + 1;
+            }
+            visited.remove(prev);
+        }
+
+        // No other stations to check here (transfers handled in TransferStation subclass)
+
+        return (minDist == Integer.MAX_VALUE) ? -1 : minDist;
     }
 }
+
