@@ -197,6 +197,12 @@ public class Lab8Tester {
 
     next = next.next;
     expected = "STATION Farragut West: orange line, in service: true, previous station: Foggy Bottom, next station: McPherson Square";
+    assertEquals(expected, next.toString());
+
+} // close test8 method
+
+} // close Lab8Tester class
+
 
    
 
