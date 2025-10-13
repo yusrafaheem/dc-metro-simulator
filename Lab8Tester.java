@@ -3,7 +3,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.*;
 import java.io.*;
 
-public class Lab8_Tester {
+public class Lab8Tester {
 
   @Test 
   public void test1(){
