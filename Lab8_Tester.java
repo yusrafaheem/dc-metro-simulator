@@ -197,3 +197,4 @@ public class Lab8Tester {
 
     next = next.next;
     expected = "STATION Farragut West: orange line, in service: true, previous station: Foggy
+
