@@ -1,105 +1,103 @@
-import java.util.ArrayList;
-
-// This class is for normal metro stations
 public class Station {
-    String line;        // color of the metro line
-    String name;        // station name
-    boolean inService;  // true if station is working
-    Station prev;       // previous station on the line
-    Station next;       // next station on the line
+    protected String line;
+    protected String name;
+    protected Station prev;
+    protected Station next;
+    protected boolean inService;
 
-    // Constructor to make a new Station
     public Station(String line, String name) {
         this.line = line;
         this.name = name;
-        this.inService = true; // station starts in service
         this.prev = null;
         this.next = null;
+        this.inService = true;
     }
 
-    // Add a next station and update that station's prev link too
     public void addNext(Station nextStation) {
         this.next = nextStation;
-        nextStation.prev = this;
+        if (nextStation != null && nextStation.prev != this) {
+            nextStation.prev = this;
+        }
     }
 
-    // Add a previous station and update that station's next link too
     public void addPrev(Station prevStation) {
         this.prev = prevStation;
-        prevStation.next = this;
+        if (prevStation != null && prevStation.next != this) {
+            prevStation.next = this;
+        }
     }
 
-    // Connect this station and another station both ways
+    // Connect this station and the given station together (prev/next links)
     public void connect(Station other) {
-        this.next = other;
-        other.prev = this;
+        if (this.next == null) {
+            this.addNext(other);
+        } else if (this.prev == null) {
+            this.addPrev(other);
+        } else {
+            // if both prev and next are taken, try to add to other side of 'other'
+            if (other.next == null) {
+                other.addNext(this);
+            } else if (other.prev == null) {
+                other.addPrev(this);
+            }
+        }
     }
 
-    // Switch if the station is available or not
-    public void switchAvailable() {
-        this.inService = !this.inService;
-    }
-
-    // Check if the station is available
     public boolean isAvailable() {
         return inService;
     }
 
-    // To check if two stations are equal (same line and name)
+    public void switchAvailable() {
+        inService = !inService;
+    }
+
+    // Check equality based on line and name only (ignore case optional)
+    @Override
     public boolean equals(Object obj) {
+        if (this == obj) return true;
         if (obj == null) return false;
         if (!(obj instanceof Station)) return false;
         Station other = (Station) obj;
-        return this.line.equals(other.line) && this.name.equals(other.name);
+        return this.name.equals(other.name) && this.line.equals(other.line);
     }
 
-    // A helper method to find the trip length (number of stops) to another station
-    public int tripLength(Station destination) {
-        ArrayList<Station> visited = new ArrayList<>();
-        return tripLengthHelper(destination, visited);
-    }
+    // Calculate trip length (number of stations) between this station and the target station
+    // Only counts direct next/prev links on the same line (no transfer handling here)
+    public int tripLength(Station target) {
+        if (this.equals(target)) return 0;
+        int length = 0;
 
-    // Recursive helper method to do the actual trip length calculation
-    private int tripLengthHelper(Station destination, ArrayList<Station> visited) {
-        // If we reached the destination
-        if (this.equals(destination)) {
-            return 0;
+        // Try forward traversal (next)
+        Station current = this;
+        while (current != null && !current.equals(target)) {
+            current = current.next;
+            length++;
+        }
+        if (current != null && current.equals(target)) {
+            return length;
         }
 
-        // If already visited this station, no need to go again (avoid loops)
-        if (visited.contains(this)) {
-            return -1;  // means no path found
+        // Try backward traversal (prev)
+        length = 0;
+        current = this;
+        while (current != null && !current.equals(target)) {
+            current = current.prev;
+            length++;
+        }
+        if (current != null && current.equals(target)) {
+            return length;
         }
 
-        // Mark this station as visited
-        visited.add(this);
-
-        // Try next station if it exists
-        if (next != null) {
-            int result = next.tripLengthHelper(destination, new ArrayList<>(visited));
-            if (result != -1) {
-                return 1 + result;
-            }
-        }
-
-        // Try previous station if it exists
-        if (prev != null) {
-            int result = prev.tripLengthHelper(destination, new ArrayList<>(visited));
-            if (result != -1) {
-                return 1 + result;
-            }
-        }
-
-        // No path found from here
+        // Not found on this line (trip via transfer stations should be handled elsewhere)
         return -1;
     }
 
-    // To print the station details like in the test cases
+    @Override
     public String toString() {
         String prevName = (prev == null) ? "none" : prev.name;
         String nextName = (next == null) ? "none" : next.name;
         String status = inService ? "true" : "false";
-        return "STATION " + name + ": " + line + " line, in service: " + status + ", previous station: " + prevName + ", next station: " + nextName;
+        return "STATION " + name + ": " + line + " line, in service: " + status +
+               ", previous station: " + prevName + ", next station: " + nextName;
     }
 }
-
