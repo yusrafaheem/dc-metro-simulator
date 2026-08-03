@@ -35,4 +35,13 @@ public class TransferBugAndTripLengthTests {
         Station s = new Station("pink", "Museum");
         assertFalse(s.equals(null));
     }
+
+    @Test
+    public void test_equals_returns_false_when_compared_to_a_non_station_object() {
+        // equals() guards with `!(other instanceof Station)` before casting
+        // -- passing an unrelated object type should return false, not
+        // throw a ClassCastException.
+        Station s = new Station("pink", "Museum");
+        assertFalse(s.equals("Museum"));
+    }
 }
