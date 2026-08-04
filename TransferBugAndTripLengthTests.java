@@ -136,4 +136,27 @@ public class TransferBugAndTripLengthTests {
         TransferStation t = new TransferStation("pink", "Museum");
         assertEquals(0, t.otherStations.size());
     }
+
+    @Test
+    public void test_addTransferStationPrev_and_addTransferStationNext_both_simply_append_in_call_order() {
+        // Despite the two method names implying a directional distinction
+        // (like addPrev/addNext do for the base next/prev pointers), both
+        // addTransferStationPrev and addTransferStationNext have identical
+        // bodies: `otherStations.add(station)`. There's no actual
+        // "prev vs next" semantic here -- calling either just appends, in
+        // whatever order you called them.
+        TransferStation t = new TransferStation("pink", "Museum");
+        Station x = new Station("a", "X");
+        Station y = new Station("b", "Y");
+        Station z = new Station("c", "Z");
+
+        t.addTransferStationPrev(x);
+        t.addTransferStationNext(y);
+        t.addTransferStationPrev(z);
+
+        assertEquals(3, t.otherStations.size());
+        assertSame(x, t.otherStations.get(0));
+        assertSame(y, t.otherStations.get(1));
+        assertSame(z, t.otherStations.get(2));
+    }
 }
