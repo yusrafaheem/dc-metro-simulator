@@ -441,4 +441,17 @@ public class TransferBugAndTripLengthTests {
             s.toString()
         );
     }
+
+    @Test
+    public void test_station_toString_includes_prev_and_next_names_when_both_set() {
+        Station a = new Station("pink", "A");
+        Station b = new Station("pink", "B");
+        Station c = new Station("pink", "C");
+        b.addPrev(a);
+        b.addNext(c);
+        assertEquals(
+            "STATION B: pink line, in service: true, previous station: A, next station: C",
+            b.toString()
+        );
+    }
 }
