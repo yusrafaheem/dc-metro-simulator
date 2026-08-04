@@ -95,4 +95,22 @@ public class TransferBugAndTripLengthTests {
         assertEquals(null, e.prev);
         assertEquals(null, e.next);
     }
+
+    @Test
+    public void test_makeEnd_is_idempotent_when_called_a_second_time() {
+        // After the first makeEnd() call, both prev and next are non-null
+        // and equal -- calling it again takes the `if (next != null)`
+        // branch and reassigns prev = next, landing on the exact same
+        // state rather than drifting or throwing.
+        EndStation e = new EndStation("pink", "Museum");
+        Station s = new Station("pink", "Square");
+        e.addNext(s);
+        e.makeEnd();
+        Station firstPrev = e.prev;
+        Station firstNext = e.next;
+
+        e.makeEnd();
+        assertSame(firstPrev, e.prev);
+        assertSame(firstNext, e.next);
+    }
 }
