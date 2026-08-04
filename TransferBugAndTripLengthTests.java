@@ -472,4 +472,11 @@ public class TransferBugAndTripLengthTests {
         Station b = new Station("orange", "Museum");
         assertFalse(a.equals(b));
     }
+
+    @Test
+    public void test_equals_returns_false_when_name_differs_but_line_matches() {
+        Station a = new Station("pink", "Museum");
+        Station b = new Station("pink", "Square");
+        assertFalse(a.equals(b));
+    }
 }
