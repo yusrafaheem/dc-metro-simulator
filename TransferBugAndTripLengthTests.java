@@ -54,4 +54,20 @@ public class TransferBugAndTripLengthTests {
         s.switchAvailable();
         assertTrue(s.isAvailable());
     }
+
+    @Test
+    public void test_addNext_with_null_clears_the_next_pointer_without_throwing() {
+        // addNext guards `s.prev = this` behind a null check, but
+        // `this.next = s` runs unconditionally -- passing null should just
+        // clear the pointer, not throw a NullPointerException.
+        Station a = new Station("pink", "A");
+        Station b = new Station("pink", "B");
+        a.addNext(b);
+        assertEquals(b, a.next);
+
+        a.addNext(null);
+        assertEquals(null, a.next);
+        // b's own prev link is untouched by this call -- only a.next changed.
+        assertSame(a, b.prev);
+    }
 }
