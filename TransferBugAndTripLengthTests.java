@@ -171,4 +171,27 @@ public class TransferBugAndTripLengthTests {
                 + "\tTransfers: \n";
         assertEquals(expected, t.toString());
     }
+
+    // ---- The core bug: wiring a TransferStation to a second line clobbers
+    // its own next/prev pointer from the first line. ------------------------
+
+    @Test
+    public void test_connecting_a_transfer_station_to_a_second_line_overwrites_its_own_next_pointer() {
+        Station a = new Station("orange", "A");
+        TransferStation t = new TransferStation("orange/red", "T");
+        a.connect(t);
+        Station b = new Station("orange", "B");
+        t.connect(b);
+        assertSame(b, t.next); // orange line wired t.next to B
+
+        // Now wire a second, unrelated line through the same transfer
+        // station object -- t.connect() is plain Station.connect(),
+        // inherited unchanged, so this just does `t.next = d`.
+        Station d = new Station("red", "D");
+        t.connect(d);
+        assertSame(d, t.next); // t.next now points at D, not B
+        // B still thinks it's connected to T on the other side...
+        assertSame(t, b.prev);
+        // ...but T no longer has any direct pointer back to B.
+    }
 }
