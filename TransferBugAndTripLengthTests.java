@@ -307,4 +307,22 @@ public class TransferBugAndTripLengthTests {
 
         assertEquals(-1, MetroSimulator.s2.tripLength(MetroSimulator.gallery_place));
     }
+
+    @Test
+    public void test_a_station_orphaned_beyond_metro_center_is_unreachable_even_from_its_own_line() {
+        // The most surprising case: McPherson Square and Federal Triangle
+        // are both on the orange line, one stop apart from Metro Center in
+        // opposite directions -- they should be 2 stops apart from each
+        // other. But Federal Triangle's connection to Metro Center was
+        // also overwritten (by the red line's wiring), so it's now
+        // unreachable from *anywhere* in the network except by walking
+        // backwards from Smithsonian. Two same-line stations, separated
+        // only by the transfer point between them, come back unreachable.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(-1, MetroSimulator.mcpherson_square.tripLength(MetroSimulator.federal_triangle));
+    }
 }
