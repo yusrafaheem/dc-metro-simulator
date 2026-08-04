@@ -290,4 +290,21 @@ public class TransferBugAndTripLengthTests {
 
         assertEquals(-1, MetroSimulator.va_square.tripLength(MetroSimulator.smithsonian));
     }
+
+    @Test
+    public void test_the_purple_line_cannot_reach_the_red_line_through_metro_center() {
+        // Same story, a different pair: Lab8Tester's test13 asserts
+        // s2.tripLength(gallery_place) == 3 -- purple line's S2 to red
+        // line's Gallery Place, transferring at Metro Center. Since
+        // purple was the last line wired, Metro Center's own pointers DO
+        // reach the purple stations (see the S3/S4 tests below), but not
+        // Gallery Place on the red line, whose connection to Metro Center
+        // was overwritten before purple's wiring ran.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(-1, MetroSimulator.s2.tripLength(MetroSimulator.gallery_place));
+    }
 }
