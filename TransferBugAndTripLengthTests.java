@@ -340,4 +340,17 @@ public class TransferBugAndTripLengthTests {
 
         assertEquals(1, MetroSimulator.s1.tripLength(MetroSimulator.s2));
     }
+
+    @Test
+    public void test_a_station_can_always_reach_itself_with_zero_stops() {
+        // tripLength()'s public entry point special-cases this before ever
+        // touching next/prev or the visited set -- true regardless of how
+        // tangled the station's actual connections are.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(0, MetroSimulator.metro_center.tripLength(MetroSimulator.metro_center));
+    }
 }
