@@ -536,4 +536,18 @@ public class TransferBugAndTripLengthTests {
         assertSame(s, e.next);
         assertSame(e.next, e.prev);
     }
+
+    @Test
+    public void test_transferstation_toString_lists_multiple_transfers_in_the_order_they_were_added() {
+        TransferStation t = new TransferStation("pink", "Hub");
+        Station x = new Station("orange", "X");
+        Station y = new Station("blue", "Y");
+        t.addTransferStationPrev(x);
+        t.addTransferStationNext(y);
+        String expected = "TRANSFERSTATION Hub: pink line, in service: true, previous station: none, next station: none\n"
+                + "\tTransfers: \n"
+                + "\t" + x.toString() + "\n"
+                + "\t" + y.toString() + "\n";
+        assertEquals(expected, t.toString());
+    }
 }
