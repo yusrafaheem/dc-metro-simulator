@@ -550,4 +550,17 @@ public class TransferBugAndTripLengthTests {
                 + "\t" + y.toString() + "\n";
         assertEquals(expected, t.toString());
     }
+
+    @Test
+    public void test_otherStations_allows_the_same_station_to_be_added_twice() {
+        // otherStations is a plain ArrayList, not a Set -- nothing stops
+        // the same Station object from being appended more than once.
+        TransferStation t = new TransferStation("pink", "Hub");
+        Station x = new Station("orange", "X");
+        t.addTransferStationPrev(x);
+        t.addTransferStationNext(x);
+        assertEquals(2, t.otherStations.size());
+        assertSame(x, t.otherStations.get(0));
+        assertSame(x, t.otherStations.get(1));
+    }
 }
