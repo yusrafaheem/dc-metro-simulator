@@ -424,4 +424,12 @@ public class TransferBugAndTripLengthTests {
             MetroSimulator.va_square.tripLength(lookalike)
         );
     }
+
+    @Test
+    public void test_new_station_starts_in_service_with_null_prev_and_next() {
+        Station s = new Station("pink", "Fresh");
+        assertTrue(s.isAvailable());
+        assertEquals(null, s.prev);
+        assertEquals(null, s.next);
+    }
 }
