@@ -432,4 +432,13 @@ public class TransferBugAndTripLengthTests {
         assertEquals(null, s.prev);
         assertEquals(null, s.next);
     }
+
+    @Test
+    public void test_station_toString_reports_none_for_null_prev_and_next() {
+        Station s = new Station("pink", "Isolated");
+        assertEquals(
+            "STATION Isolated: pink line, in service: true, previous station: none, next station: none",
+            s.toString()
+        );
+    }
 }
