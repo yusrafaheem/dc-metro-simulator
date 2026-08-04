@@ -235,4 +235,23 @@ public class TransferBugAndTripLengthTests {
         assertSame(a, t.otherStations.get(0)); // but A is still recorded here
         assertSame(c, t.otherStations.get(1));
     }
+
+    // ---- The same bug, now on the real 3-line MetroSimulator network. -----
+    // After makeOrangeLine/makeRedLine/makePurpleLine all run, Metro Center's
+    // own next/prev end up pointing at S4/S3 (whichever line connected last
+    // -- purple), since each line's wiring overwrote the previous one's.
+
+    @Test
+    public void test_a_station_can_still_reach_metro_center_through_its_own_intact_next_pointer() {
+        // McPherson Square (orange line) still has its own next pointer
+        // aimed at Metro Center -- that assignment was on McPherson
+        // Square's own field, and nothing later overwrote it. So a trip
+        // starting FROM McPherson Square still finds Metro Center fine.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(1, MetroSimulator.mcpherson_square.tripLength(MetroSimulator.metro_center));
+    }
 }
