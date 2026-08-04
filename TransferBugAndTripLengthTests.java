@@ -368,4 +368,18 @@ public class TransferBugAndTripLengthTests {
 
         assertEquals(1, MetroSimulator.smithsonian.tripLength(MetroSimulator.federal_triangle));
     }
+
+    @Test
+    public void test_the_transfer_station_can_still_reach_the_two_stations_it_is_directly_wired_to() {
+        // Metro Center's next/prev only point at whichever line was wired
+        // last (purple), but those two purple-line connections themselves
+        // are completely normal, functioning edges -- the bug only affects
+        // reachability of the earlier (orange/red) connections, not these.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(2, MetroSimulator.s3.tripLength(MetroSimulator.s4));
+    }
 }
