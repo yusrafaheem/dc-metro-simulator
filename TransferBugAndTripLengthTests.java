@@ -44,4 +44,14 @@ public class TransferBugAndTripLengthTests {
         Station s = new Station("pink", "Museum");
         assertFalse(s.equals("Museum"));
     }
+
+    @Test
+    public void test_switching_available_twice_returns_to_the_original_state() {
+        Station s = new Station("pink", "Museum");
+        assertTrue(s.isAvailable());
+        s.switchAvailable();
+        assertFalse(s.isAvailable());
+        s.switchAvailable();
+        assertTrue(s.isAvailable());
+    }
 }
