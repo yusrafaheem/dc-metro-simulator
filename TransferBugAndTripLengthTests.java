@@ -479,4 +479,14 @@ public class TransferBugAndTripLengthTests {
         Station b = new Station("pink", "Square");
         assertFalse(a.equals(b));
     }
+
+    @Test
+    public void test_equals_is_case_sensitive_on_name() {
+        // name.equals(s.name) is a plain String.equals() call -- no
+        // case-folding, so "Museum" and "museum" are different stations as
+        // far as equals()/tripLength() are concerned.
+        Station a = new Station("pink", "Museum");
+        Station b = new Station("pink", "museum");
+        assertFalse(a.equals(b));
+    }
 }
