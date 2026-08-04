@@ -70,4 +70,17 @@ public class TransferBugAndTripLengthTests {
         // b's own prev link is untouched by this call -- only a.next changed.
         assertSame(a, b.prev);
     }
+
+    @Test
+    public void test_addPrev_with_null_clears_the_prev_pointer_without_throwing() {
+        // Mirror of the addNext(null) case, on the other pointer.
+        Station c = new Station("pink", "C");
+        Station d = new Station("pink", "D");
+        c.addPrev(d);
+        assertEquals(d, c.prev);
+
+        c.addPrev(null);
+        assertEquals(null, c.prev);
+        assertSame(c, d.next);
+    }
 }
