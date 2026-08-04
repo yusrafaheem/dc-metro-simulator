@@ -113,4 +113,21 @@ public class TransferBugAndTripLengthTests {
         assertSame(firstPrev, e.prev);
         assertSame(firstNext, e.next);
     }
+
+    @Test
+    public void test_makeEnd_after_addPrev_sets_next_to_the_exact_same_object_reference_as_prev() {
+        // The addNext-then-makeEnd direction is already exercised in
+        // Lab8Tester's test4. This exercises the mirror direction
+        // (addPrev, where the missing pointer is next) and checks object
+        // *identity*, not just equal-looking toString output -- e.prev and
+        // e.next should end up pointing at the literal same object.
+        EndStation e = new EndStation("pink", "Museum");
+        Station s = new Station("pink", "Square");
+        e.addPrev(s);
+        assertEquals(null, e.next);
+
+        e.makeEnd();
+        assertSame(s, e.prev);
+        assertSame(e.prev, e.next);
+    }
 }
