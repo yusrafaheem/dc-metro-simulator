@@ -403,4 +403,25 @@ public class TransferBugAndTripLengthTests {
         assertEquals(before, after);
         assertEquals(1, after);
     }
+
+    @Test
+    public void test_a_separate_unconnected_object_with_the_same_name_and_line_is_treated_as_the_same_destination() {
+        // tripLength's `dest.equals(this)` self-check and tripLengthHelper's
+        // traversal both compare Stations with equals() (name + line), not
+        // reference identity. A brand new, totally unconnected Station
+        // object with a real station's name/line is indistinguishable from
+        // that real station as a *destination* -- the search still finds
+        // and stops at the actual connected node with that name/line,
+        // since equals() is what tripLengthHelper checks against dest.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        Station lookalike = new Station("orange", "Court House");
+        assertEquals(
+            MetroSimulator.va_square.tripLength(MetroSimulator.court_house),
+            MetroSimulator.va_square.tripLength(lookalike)
+        );
+    }
 }
