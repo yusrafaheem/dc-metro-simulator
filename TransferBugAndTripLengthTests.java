@@ -454,4 +454,15 @@ public class TransferBugAndTripLengthTests {
             b.toString()
         );
     }
+
+    @Test
+    public void test_equals_returns_true_for_different_instances_with_the_same_name_and_line() {
+        // equals() is purely name+line based, not reference identity -- two
+        // completely separate, unconnected Station objects with matching
+        // fields are "equal" to each other.
+        Station a = new Station("pink", "Museum");
+        Station b = new Station("pink", "Museum");
+        assertTrue(a.equals(b));
+        assertFalse(a == b);
+    }
 }
