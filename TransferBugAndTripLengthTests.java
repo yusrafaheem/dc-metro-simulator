@@ -489,4 +489,15 @@ public class TransferBugAndTripLengthTests {
         Station b = new Station("pink", "museum");
         assertFalse(a.equals(b));
     }
+
+    @Test
+    public void test_addNext_sets_a_bidirectional_link_between_two_stations() {
+        // The positive counterpart to the addNext(null) test above: a real
+        // argument sets both sides of the link in one call.
+        Station a = new Station("pink", "A");
+        Station b = new Station("pink", "B");
+        a.addNext(b);
+        assertSame(b, a.next);
+        assertSame(a, b.prev);
+    }
 }
