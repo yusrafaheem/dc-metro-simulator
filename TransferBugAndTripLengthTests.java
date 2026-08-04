@@ -522,4 +522,18 @@ public class TransferBugAndTripLengthTests {
         assertSame(a, b.prev);
         assertEquals(null, a.prev);
     }
+
+    @Test
+    public void test_makeEnd_after_addNext_sets_prev_to_the_same_object_reference_as_next() {
+        // Mirror of the addPrev case covered earlier in this file -- this
+        // exercises makeEnd()'s primary `if (next != null)` branch instead
+        // of the `else if (prev != null)` branch.
+        EndStation e = new EndStation("pink", "Museum");
+        Station s = new Station("pink", "Square");
+        e.addNext(s);
+        assertEquals(null, e.prev);
+        e.makeEnd();
+        assertSame(s, e.next);
+        assertSame(e.next, e.prev);
+    }
 }
