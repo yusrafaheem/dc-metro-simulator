@@ -509,4 +509,17 @@ public class TransferBugAndTripLengthTests {
         assertSame(b, a.prev);
         assertSame(a, b.next);
     }
+
+    @Test
+    public void test_connect_is_just_an_alias_for_addNext_not_addPrev() {
+        // connect() only ever calls addNext() -- it sets up a "backwards"
+        // link (the callee's prev points at the caller) but never touches
+        // the caller's own prev pointer the way addPrev() would.
+        Station a = new Station("pink", "A");
+        Station b = new Station("pink", "B");
+        a.connect(b);
+        assertSame(b, a.next);
+        assertSame(a, b.prev);
+        assertEquals(null, a.prev);
+    }
 }
