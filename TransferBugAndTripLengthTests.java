@@ -325,4 +325,19 @@ public class TransferBugAndTripLengthTests {
 
         assertEquals(-1, MetroSimulator.mcpherson_square.tripLength(MetroSimulator.federal_triangle));
     }
+
+    // ---- The parts of the network that DO still work correctly. -----------
+
+    @Test
+    public void test_adjacent_stations_on_the_purple_line_are_one_stop_apart() {
+        // Not everything is broken -- the purple line was wired last, so its
+        // own internal next/prev chain (away from Metro Center) is intact
+        // and behaves exactly as expected.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(1, MetroSimulator.s1.tripLength(MetroSimulator.s2));
+    }
 }
