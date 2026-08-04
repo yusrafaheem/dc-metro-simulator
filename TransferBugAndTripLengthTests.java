@@ -500,4 +500,13 @@ public class TransferBugAndTripLengthTests {
         assertSame(b, a.next);
         assertSame(a, b.prev);
     }
+
+    @Test
+    public void test_addPrev_sets_a_bidirectional_link_between_two_stations() {
+        Station a = new Station("pink", "A");
+        Station b = new Station("pink", "B");
+        a.addPrev(b);
+        assertSame(b, a.prev);
+        assertSame(a, b.next);
+    }
 }
