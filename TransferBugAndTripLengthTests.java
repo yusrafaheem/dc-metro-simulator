@@ -382,4 +382,25 @@ public class TransferBugAndTripLengthTests {
 
         assertEquals(2, MetroSimulator.s3.tripLength(MetroSimulator.s4));
     }
+
+    // ---- Surprising, undocumented cross-cutting behaviors. -----------------
+
+    @Test
+    public void test_taking_a_station_out_of_service_has_no_effect_on_trip_length() {
+        // inService is tracked and toggled by switchAvailable(), but
+        // tripLengthHelper() never checks it -- a station that's been taken
+        // "out of service" is still fully traversable. Whether that's
+        // intended or not, it's real, current behavior worth pinning down.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        int before = MetroSimulator.farragut_west.tripLength(MetroSimulator.mcpherson_square);
+        MetroSimulator.mcpherson_square.switchAvailable();
+        int after = MetroSimulator.farragut_west.tripLength(MetroSimulator.mcpherson_square);
+
+        assertEquals(before, after);
+        assertEquals(1, after);
+    }
 }
