@@ -353,4 +353,19 @@ public class TransferBugAndTripLengthTests {
 
         assertEquals(0, MetroSimulator.metro_center.tripLength(MetroSimulator.metro_center));
     }
+
+    @Test
+    public void test_trip_length_does_not_infinite_loop_through_an_end_stations_self_referential_wraparound() {
+        // EndStation.makeEnd() can leave prev and next pointing at the same
+        // object (see test_makeEnd_after_addPrev_... above). tripLengthHelper's
+        // visited-set + backtracking has to actually handle that wraparound
+        // rather than recursing forever -- this is the real network's own
+        // end-of-line station, not a hand-built edge case.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(1, MetroSimulator.smithsonian.tripLength(MetroSimulator.federal_triangle));
+    }
 }
