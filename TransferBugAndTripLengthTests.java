@@ -194,4 +194,23 @@ public class TransferBugAndTripLengthTests {
         assertSame(t, b.prev);
         // ...but T no longer has any direct pointer back to B.
     }
+
+    @Test
+    public void test_connecting_a_transfer_station_to_a_second_line_overwrites_its_own_prev_pointer() {
+        // Mirror of the previous test, on the prev side: connecting INTO a
+        // transfer station (rather than the transfer station connecting
+        // out) sets its prev via addNext's `s.prev = this` branch. A
+        // second unrelated line connecting in the same way overwrites it.
+        Station a = new Station("orange", "A");
+        TransferStation t = new TransferStation("orange/red", "T");
+        a.connect(t);
+        assertSame(a, t.prev);
+
+        Station c = new Station("red", "C");
+        c.connect(t);
+        assertSame(c, t.prev); // t.prev now points at C, not A
+        // A still has t as its next...
+        assertSame(t, a.next);
+        // ...but t has no direct pointer back to A anymore.
+    }
 }
