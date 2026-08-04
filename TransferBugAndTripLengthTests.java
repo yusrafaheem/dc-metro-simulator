@@ -563,4 +563,16 @@ public class TransferBugAndTripLengthTests {
         assertSame(x, t.otherStations.get(0));
         assertSame(x, t.otherStations.get(1));
     }
+
+    @Test
+    public void test_transferstation_equals_a_plain_station_that_shares_its_name_and_line() {
+        // equals() only checks `other instanceof Station`, never getClass()
+        // -- a TransferStation and a completely unrelated plain Station can
+        // be "equal" to each other purely by name/line, even though one has
+        // an otherStations list and the other doesn't.
+        TransferStation t = new TransferStation("pink", "Hub");
+        Station plain = new Station("pink", "Hub");
+        assertTrue(t.equals(plain));
+        assertTrue(plain.equals(t));
+    }
 }
