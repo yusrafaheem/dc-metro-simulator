@@ -159,4 +159,16 @@ public class TransferBugAndTripLengthTests {
         assertSame(y, t.otherStations.get(1));
         assertSame(z, t.otherStations.get(2));
     }
+
+    @Test
+    public void test_transfer_station_toString_on_a_fresh_instance_has_an_empty_transfers_section() {
+        // A more precise version of Lab8Tester's test5, which only checks
+        // the full toString of a fresh TransferStation once. This isolates
+        // just the "Transfers:" section formatting, which the next several
+        // commits build on to interpret otherStations' printed contents.
+        TransferStation t = new TransferStation("pink", "Empty");
+        String expected = "TRANSFERSTATION Empty: pink line, in service: true, previous station: none, next station: none\n"
+                + "\tTransfers: \n";
+        assertEquals(expected, t.toString());
+    }
 }
