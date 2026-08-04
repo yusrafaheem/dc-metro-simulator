@@ -213,4 +213,26 @@ public class TransferBugAndTripLengthTests {
         assertSame(t, a.next);
         // ...but t has no direct pointer back to A anymore.
     }
+
+    @Test
+    public void test_otherStations_holds_the_earlier_lines_connection_even_though_the_direct_pointer_is_lost() {
+        // This is exactly the pattern MetroSimulator.makeOrangeLine/
+        // makeRedLine/makePurpleLine follow: connect(), then immediately
+        // call addTransferStationPrev/Next to also record the connection
+        // in otherStations. otherStations DOES correctly retain A here --
+        // the data isn't lost. The bug (documented in later commits) is
+        // that tripLength() never actually reads otherStations back out.
+        Station a = new Station("orange", "A");
+        TransferStation t = new TransferStation("orange/red", "T");
+        a.connect(t);
+        t.addTransferStationPrev(a);
+
+        Station c = new Station("red", "C");
+        c.connect(t);
+        t.addTransferStationPrev(c);
+
+        assertSame(c, t.prev); // direct pointer overwritten, as shown above
+        assertSame(a, t.otherStations.get(0)); // but A is still recorded here
+        assertSame(c, t.otherStations.get(1));
+    }
 }
