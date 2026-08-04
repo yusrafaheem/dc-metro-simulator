@@ -83,4 +83,16 @@ public class TransferBugAndTripLengthTests {
         assertEquals(null, c.prev);
         assertSame(c, d.next);
     }
+
+    @Test
+    public void test_makeEnd_is_a_no_op_when_both_prev_and_next_are_null() {
+        // makeEnd()'s comment says "If both are null, do nothing" -- a
+        // freshly-constructed, unconnected EndStation should stay
+        // unconnected after calling it, not throw or fabricate a
+        // self-reference.
+        EndStation e = new EndStation("pink", "Isolated");
+        e.makeEnd();
+        assertEquals(null, e.prev);
+        assertEquals(null, e.next);
+    }
 }
