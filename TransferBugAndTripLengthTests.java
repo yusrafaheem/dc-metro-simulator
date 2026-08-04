@@ -130,4 +130,10 @@ public class TransferBugAndTripLengthTests {
         assertSame(s, e.prev);
         assertSame(e.prev, e.next);
     }
+
+    @Test
+    public void test_otherStations_starts_empty_for_a_new_transfer_station() {
+        TransferStation t = new TransferStation("pink", "Museum");
+        assertEquals(0, t.otherStations.size());
+    }
 }
