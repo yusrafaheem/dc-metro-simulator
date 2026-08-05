@@ -667,4 +667,20 @@ public class TransferBugAndTripLengthTests {
         assertEquals("teal", s.line);
         assertEquals("Archives", s.name);
     }
+
+    @Test
+    public void test_a_station_that_points_to_itself_does_not_infinite_loop_or_throw() {
+        // Nothing stops addNext(this) -- a station can be wired to point at
+        // itself. tripLength's visited set (seeded with `this` before the
+        // helper ever runs) keeps that from recursing forever: by the time
+        // the self-loop is checked, `this` is already in `visited`, so the
+        // next/prev branch is skipped outright.
+        Station a = new Station("pink", "A");
+        a.addNext(a);
+        assertSame(a, a.next);
+        assertSame(a, a.prev);
+
+        Station b = new Station("pink", "B");
+        assertEquals(-1, a.tripLength(b));
+    }
 }
