@@ -805,4 +805,15 @@ public class TransferBugAndTripLengthTests {
             e.toString()
         );
     }
+
+    @Test
+    public void test_switching_available_three_times_ends_up_unavailable() {
+        // Straightforward parity check -- an odd number of toggles ends up
+        // opposite the starting state, unlike the earlier "twice" test.
+        Station s = new Station("pink", "Museum");
+        s.switchAvailable();
+        s.switchAvailable();
+        s.switchAvailable();
+        assertFalse(s.isAvailable());
+    }
 }
