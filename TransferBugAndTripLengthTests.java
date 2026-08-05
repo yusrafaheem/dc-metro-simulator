@@ -796,4 +796,13 @@ public class TransferBugAndTripLengthTests {
         assertEquals(-1, MetroSimulator.metro_center.tripLength(lookalikeMcpherson));
         assertEquals(-1, MetroSimulator.metro_center.tripLength(MetroSimulator.mcpherson_square));
     }
+
+    @Test
+    public void test_endstation_toString_uses_the_endstation_prefix_and_reports_none_when_unconnected() {
+        EndStation e = new EndStation("teal", "Terminus");
+        assertEquals(
+            "ENDSTATION Terminus: teal line, in service: true, previous station: none, next station: none",
+            e.toString()
+        );
+    }
 }
