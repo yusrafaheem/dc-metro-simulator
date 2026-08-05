@@ -851,4 +851,26 @@ public class TransferBugAndTripLengthTests {
         assertEquals(1, MetroSimulator.s4.tripLength(MetroSimulator.s5));
         assertEquals(1, MetroSimulator.s5.tripLength(MetroSimulator.s4));
     }
+
+    @Test
+    public void test_calling_initialize_twice_produces_completely_fresh_disconnected_stations() {
+        // initialize() just reassigns each static field to a brand-new
+        // object -- it doesn't reset or reuse the old ones. Calling it
+        // again after a network has already been wired throws away all of
+        // that wiring: the static field now points at a fresh station with
+        // null prev/next, not the connected one from before.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        Station oldMcphersonSquare = MetroSimulator.mcpherson_square;
+        assertEquals(1, oldMcphersonSquare.tripLength(MetroSimulator.metro_center));
+
+        MetroSimulator.initialize();
+
+        assertFalse(oldMcphersonSquare == MetroSimulator.mcpherson_square);
+        assertEquals(null, MetroSimulator.mcpherson_square.next);
+        assertEquals(null, MetroSimulator.mcpherson_square.prev);
+    }
 }
