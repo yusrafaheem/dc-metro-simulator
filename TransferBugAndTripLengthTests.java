@@ -589,4 +589,23 @@ public class TransferBugAndTripLengthTests {
         assertEquals(1, t.otherStations.size());
         assertEquals(-1, t.tripLength(reachableOnlyViaOtherStations));
     }
+
+    @Test
+    public void test_metro_centers_final_otherStations_list_accumulates_all_three_lines_transfer_points() {
+        // Unlike next/prev, otherStations is never overwritten -- by the
+        // time all three lines are built, it holds one entry per
+        // addTransferStationPrev/Next call across the whole construction,
+        // in call order.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(5, MetroSimulator.metro_center.otherStations.size());
+        assertSame(MetroSimulator.mcpherson_square, MetroSimulator.metro_center.otherStations.get(0));
+        assertSame(MetroSimulator.farragut_north, MetroSimulator.metro_center.otherStations.get(1));
+        assertSame(MetroSimulator.gallery_place, MetroSimulator.metro_center.otherStations.get(2));
+        assertSame(MetroSimulator.s3, MetroSimulator.metro_center.otherStations.get(3));
+        assertSame(MetroSimulator.s4, MetroSimulator.metro_center.otherStations.get(4));
+    }
 }
