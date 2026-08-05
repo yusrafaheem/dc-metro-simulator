@@ -739,4 +739,10 @@ public class TransferBugAndTripLengthTests {
         assertEquals(1, t.otherStations.size());
         assertEquals(null, t.otherStations.get(0));
     }
+
+    @Test
+    public void test_equals_is_reflexive() {
+        Station s = new Station("pink", "Museum");
+        assertTrue(s.equals(s));
+    }
 }
