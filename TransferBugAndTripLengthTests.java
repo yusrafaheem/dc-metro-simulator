@@ -889,4 +889,14 @@ public class TransferBugAndTripLengthTests {
         assertEquals(0, MetroSimulator.metro_center.otherStations.size());
         assertEquals(null, MetroSimulator.metro_center.next);
     }
+
+    @Test
+    public void test_metro_center_and_the_end_stations_have_the_expected_runtime_types() {
+        MetroSimulator.initialize();
+
+        assertTrue(MetroSimulator.metro_center instanceof TransferStation);
+        assertTrue(MetroSimulator.va_square instanceof EndStation);
+        assertFalse(MetroSimulator.clarendon instanceof EndStation);
+        assertFalse(MetroSimulator.clarendon instanceof TransferStation);
+    }
 }
