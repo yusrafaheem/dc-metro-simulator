@@ -683,4 +683,11 @@ public class TransferBugAndTripLengthTests {
         Station b = new Station("pink", "B");
         assertEquals(-1, a.tripLength(b));
     }
+
+    @Test
+    public void test_transferstation_toString_reflects_out_of_service_state() {
+        TransferStation t = new TransferStation("pink", "Hub");
+        t.switchAvailable();
+        assertTrue(t.toString().contains("in service: false"));
+    }
 }
