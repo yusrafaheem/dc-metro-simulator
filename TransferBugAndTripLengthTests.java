@@ -745,4 +745,21 @@ public class TransferBugAndTripLengthTests {
         Station s = new Station("pink", "Museum");
         assertTrue(s.equals(s));
     }
+
+    @Test
+    public void test_two_transferstations_with_different_otherStations_are_still_equal_if_name_and_line_match() {
+        // equals() never looks at otherStations -- two TransferStations
+        // that have accumulated completely different transfer lists are
+        // still "equal" as long as name and line match.
+        TransferStation t1 = new TransferStation("pink", "Hub");
+        t1.addTransferStationPrev(new Station("orange", "X"));
+
+        TransferStation t2 = new TransferStation("pink", "Hub");
+        t2.addTransferStationNext(new Station("blue", "Y"));
+        t2.addTransferStationNext(new Station("green", "Z"));
+
+        assertTrue(t1.equals(t2));
+        assertEquals(1, t1.otherStations.size());
+        assertEquals(2, t2.otherStations.size());
+    }
 }
