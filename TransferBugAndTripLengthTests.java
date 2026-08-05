@@ -826,4 +826,12 @@ public class TransferBugAndTripLengthTests {
         assertSame(b, a.next);
         assertSame(a, b.prev);
     }
+
+    @Test
+    public void test_a_stations_toString_reflects_its_current_availability_state() {
+        Station s = new Station("pink", "Museum");
+        assertTrue(s.toString().contains("in service: true"));
+        s.switchAvailable();
+        assertTrue(s.toString().contains("in service: false"));
+    }
 }
