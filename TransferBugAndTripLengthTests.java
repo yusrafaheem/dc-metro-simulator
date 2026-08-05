@@ -608,4 +608,14 @@ public class TransferBugAndTripLengthTests {
         assertSame(MetroSimulator.s3, MetroSimulator.metro_center.otherStations.get(3));
         assertSame(MetroSimulator.s4, MetroSimulator.metro_center.otherStations.get(4));
     }
+
+    @Test
+    public void test_a_trip_within_the_purple_line_through_metro_center_still_works_since_purple_was_wired_last() {
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(3, MetroSimulator.s2.tripLength(MetroSimulator.s4));
+    }
 }
