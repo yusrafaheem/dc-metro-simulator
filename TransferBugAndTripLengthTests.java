@@ -778,4 +778,22 @@ public class TransferBugAndTripLengthTests {
 
         assertEquals(-1, MetroSimulator.va_square.tripLength(null));
     }
+
+    @Test
+    public void test_a_lookalike_destination_does_not_bypass_the_transfer_station_bug() {
+        // Contrast with the earlier "lookalike destination" test, which
+        // showed equals()-based matching finds a real, REACHABLE station
+        // just as well as the original object. Here the destination is on
+        // a broken branch -- matching by equals() doesn't create a
+        // shortcut through Metro Center's missing pointer, so the
+        // lookalike fails exactly the same way the real object does.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        Station lookalikeMcpherson = new Station("orange", "McPherson Square");
+        assertEquals(-1, MetroSimulator.metro_center.tripLength(lookalikeMcpherson));
+        assertEquals(-1, MetroSimulator.metro_center.tripLength(MetroSimulator.mcpherson_square));
+    }
 }
