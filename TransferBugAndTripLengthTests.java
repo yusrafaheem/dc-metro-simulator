@@ -690,4 +690,29 @@ public class TransferBugAndTripLengthTests {
         t.switchAvailable();
         assertTrue(t.toString().contains("in service: false"));
     }
+
+    @Test
+    public void test_makeEnd_overwrites_a_legitimate_prev_pointer_even_when_next_was_already_set_by_someone_else() {
+        // A real gotcha in EndStation, independent of the TransferStation
+        // bug: makeEnd()'s `if (next != null) prev = next` branch fires
+        // whenever next is set at all -- it never checks whether prev
+        // already held a different, legitimate connection. Calling
+        // makeEnd() on a station that's genuinely wired on BOTH sides (not
+        // just the one-sided way MetroSimulator's real end-of-line stations
+        // are used) silently clobbers the prev pointer instead of leaving
+        // it alone.
+        Station x = new Station("pink", "X");
+        EndStation y = new EndStation("pink", "Y");
+        Station z = new Station("pink", "Z");
+        x.connect(y); // x.next = y, y.prev = x
+        y.connect(z); // y.next = z, z.prev = y
+
+        assertSame(x, y.prev);
+        assertSame(z, y.next);
+
+        y.makeEnd();
+
+        assertSame(z, y.next);
+        assertSame(z, y.prev); // y.prev is now Z, not X -- the real connection to X is lost
+    }
 }
