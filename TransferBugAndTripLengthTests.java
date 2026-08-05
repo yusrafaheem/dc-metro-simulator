@@ -915,4 +915,18 @@ public class TransferBugAndTripLengthTests {
         assertEquals(1, MetroSimulator.farragut_west.tripLength(MetroSimulator.mcpherson_square));
         assertEquals(1, MetroSimulator.mcpherson_square.tripLength(MetroSimulator.farragut_west));
     }
+
+    @Test
+    public void test_virginia_square_to_mcpherson_square_is_six_stops_the_full_first_half_of_the_orange_line() {
+        // The orange line's first half, right up to (but not including)
+        // Metro Center, is entirely intact -- one stop short of the
+        // 7-stop trip to Metro Center itself documented elsewhere in this
+        // file.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(6, MetroSimulator.va_square.tripLength(MetroSimulator.mcpherson_square));
+    }
 }
