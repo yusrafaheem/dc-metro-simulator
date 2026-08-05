@@ -762,4 +762,20 @@ public class TransferBugAndTripLengthTests {
         assertEquals(1, t1.otherStations.size());
         assertEquals(2, t2.otherStations.size());
     }
+
+    @Test
+    public void test_tripLength_with_a_null_destination_traverses_everything_and_returns_negative_one() {
+        // equals(null) is explicitly null-safe (returns false rather than
+        // throwing), and dest is never dereferenced inside
+        // tripLengthHelper -- only compared against via equals(). So
+        // tripLength(null) doesn't NPE; it just walks the entire reachable
+        // component, never finds a match, and reports -1, same as any
+        // other genuinely unreachable destination.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(-1, MetroSimulator.va_square.tripLength(null));
+    }
 }
