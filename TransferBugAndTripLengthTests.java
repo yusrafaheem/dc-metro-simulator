@@ -645,4 +645,19 @@ public class TransferBugAndTripLengthTests {
         assertEquals(1, MetroSimulator.farragut_north.tripLength(MetroSimulator.metro_center));
         assertEquals(-1, MetroSimulator.metro_center.tripLength(MetroSimulator.farragut_north));
     }
+
+    @Test
+    public void test_virginia_square_is_seven_stops_from_metro_center_but_metro_center_cannot_reach_back() {
+        // A long, real trip number that still computes correctly in one
+        // direction (Virginia Square's own chain of next pointers down to
+        // Metro Center was never touched), paired with the same asymmetry
+        // bug in the other direction.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(7, MetroSimulator.va_square.tripLength(MetroSimulator.metro_center));
+        assertEquals(-1, MetroSimulator.metro_center.tripLength(MetroSimulator.va_square));
+    }
 }
