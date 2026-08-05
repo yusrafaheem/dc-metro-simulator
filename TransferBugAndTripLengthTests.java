@@ -660,4 +660,11 @@ public class TransferBugAndTripLengthTests {
         assertEquals(7, MetroSimulator.va_square.tripLength(MetroSimulator.metro_center));
         assertEquals(-1, MetroSimulator.metro_center.tripLength(MetroSimulator.va_square));
     }
+
+    @Test
+    public void test_station_constructor_stores_line_and_name_fields_directly() {
+        Station s = new Station("teal", "Archives");
+        assertEquals("teal", s.line);
+        assertEquals("Archives", s.name);
+    }
 }
