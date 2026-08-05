@@ -727,4 +727,16 @@ public class TransferBugAndTripLengthTests {
         t.addTransferStationPrev(null);
         t.toString();
     }
+
+    @Test
+    public void test_otherStations_can_contain_a_null_entry_without_immediately_failing() {
+        // The add itself is harmless -- addTransferStationPrev/Next never
+        // dereference the argument, so a null entry sits quietly in the
+        // list until something (like toString(), see the test above)
+        // actually tries to use it.
+        TransferStation t = new TransferStation("pink", "Hub");
+        t.addTransferStationPrev(null);
+        assertEquals(1, t.otherStations.size());
+        assertEquals(null, t.otherStations.get(0));
+    }
 }
