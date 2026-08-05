@@ -834,4 +834,21 @@ public class TransferBugAndTripLengthTests {
         s.switchAvailable();
         assertTrue(s.toString().contains("in service: false"));
     }
+
+    @Test
+    public void test_s5_end_of_purple_line_is_reachable_and_symmetric_with_s4_despite_its_own_wraparound() {
+        // S5 (like Smithsonian) is an EndStation whose makeEnd() call
+        // leaves prev and next pointing at the same object -- but the trip
+        // to and from its one real neighbor still comes back correctly,
+        // and (unlike the Metro Center pairs) is symmetric in both
+        // directions, since S5 sits at the very end of a line, nowhere
+        // near the bug.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(1, MetroSimulator.s4.tripLength(MetroSimulator.s5));
+        assertEquals(1, MetroSimulator.s5.tripLength(MetroSimulator.s4));
+    }
 }
