@@ -873,4 +873,20 @@ public class TransferBugAndTripLengthTests {
         assertEquals(null, MetroSimulator.mcpherson_square.next);
         assertEquals(null, MetroSimulator.mcpherson_square.prev);
     }
+
+    @Test
+    public void test_a_freshly_initialized_network_before_any_line_is_built_has_all_null_pointers() {
+        // initialize() only constructs the stations -- it's the
+        // make*Line() calls that do all the wiring. Every other test in
+        // this file calls initialize() followed immediately by all three
+        // make*Line() calls; this test pins down what state initialize()
+        // leaves behind on its own, since every other test implicitly
+        // depends on it.
+        MetroSimulator.initialize();
+
+        assertEquals(null, MetroSimulator.mcpherson_square.next);
+        assertEquals(null, MetroSimulator.mcpherson_square.prev);
+        assertEquals(0, MetroSimulator.metro_center.otherStations.size());
+        assertEquals(null, MetroSimulator.metro_center.next);
+    }
 }
