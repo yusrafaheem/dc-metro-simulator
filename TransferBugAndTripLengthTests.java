@@ -715,4 +715,16 @@ public class TransferBugAndTripLengthTests {
         assertSame(z, y.next);
         assertSame(z, y.prev); // y.prev is now Z, not X -- the real connection to X is lost
     }
+
+    @Test(expected = NullPointerException.class)
+    public void test_toString_throws_a_null_pointer_exception_if_otherStations_contains_a_null_entry() {
+        // addTransferStationPrev/Next take a raw Station reference with no
+        // null check, and toString() unconditionally calls s.toString() on
+        // every entry -- a null slipped into otherStations turns a routine
+        // toString() call into an NPE instead of, say, skipping it or
+        // printing "none".
+        TransferStation t = new TransferStation("pink", "Hub");
+        t.addTransferStationPrev(null);
+        t.toString();
+    }
 }
