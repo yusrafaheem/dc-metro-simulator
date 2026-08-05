@@ -899,4 +899,20 @@ public class TransferBugAndTripLengthTests {
         assertFalse(MetroSimulator.clarendon instanceof EndStation);
         assertFalse(MetroSimulator.clarendon instanceof TransferStation);
     }
+
+    @Test
+    public void test_farragut_west_and_mcpherson_square_are_symmetric_since_neither_touches_metro_center() {
+        // A useful contrast with the asymmetric Metro Center pairs
+        // elsewhere in this file: two adjacent stations that are both one
+        // hop AWAY from Metro Center (rather than one of them BEING Metro
+        // Center) never touch its broken pointer at all, so the trip is a
+        // normal, symmetric 1 stop in either direction.
+        MetroSimulator.initialize();
+        MetroSimulator.makeOrangeLine();
+        MetroSimulator.makeRedLine();
+        MetroSimulator.makePurpleLine();
+
+        assertEquals(1, MetroSimulator.farragut_west.tripLength(MetroSimulator.mcpherson_square));
+        assertEquals(1, MetroSimulator.mcpherson_square.tripLength(MetroSimulator.farragut_west));
+    }
 }
