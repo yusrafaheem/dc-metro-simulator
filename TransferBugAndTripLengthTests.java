@@ -816,4 +816,14 @@ public class TransferBugAndTripLengthTests {
         s.switchAvailable();
         assertFalse(s.isAvailable());
     }
+
+    @Test
+    public void test_switchAvailable_does_not_affect_prev_or_next_pointers() {
+        Station a = new Station("pink", "A");
+        Station b = new Station("pink", "B");
+        a.addNext(b);
+        a.switchAvailable();
+        assertSame(b, a.next);
+        assertSame(a, b.prev);
+    }
 }
