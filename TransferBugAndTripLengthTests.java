@@ -574,17 +574,16 @@ public class TransferBugAndTripLengthTests {
     }
 
     @Test
-    public void test_transfer_station_tripLength_never_consults_otherStations_even_when_it_holds_a_reachable_station() {
-        // Minimal, isolated repro of the root cause behind the
-        // MetroSimulator bug: TransferStation never overrides
-        // tripLengthHelper(), so otherStations is pure decoration for
-        // pathfinding -- even a station sitting right there in the list is
-        // unreachable if it was never wired through next/prev.
+    public void test_transfer_station_tripLength_now_consults_otherStations_to_find_a_reachable_station() {
+        // Minimal, isolated repro of the fix: TransferStation now overrides
+        // getTransferNeighbors() to expose otherStations, and
+        // tripLengthHelper() walks it -- a station sitting in that list
+        // with no next/prev wiring of its own is a single, direct hop away.
         TransferStation t = new TransferStation("pink", "Hub");
-        Station reachableOnlyViaOtherStations = new Station("pink", "Ghost");
-        t.addTransferStationPrev(reachableOnlyViaOtherStations);
+        Station reachableViaOtherStations = new Station("pink", "Ghost");
+        t.addTransferStationPrev(reachableViaOtherStations);
         assertEquals(1, t.otherStations.size());
-        assertEquals(-1, t.tripLength(reachableOnlyViaOtherStations));
+        assertEquals(1, t.tripLength(reachableViaOtherStations));
     }
 
     @Test
