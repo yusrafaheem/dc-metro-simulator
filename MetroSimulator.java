@@ -75,6 +75,7 @@ public class MetroSimulator {
         mcpherson_square.connect(metro_center);
         metro_center.addTransferStationPrev(mcpherson_square); // add metro_center prev link for transfer
         metro_center.connect(federal_triangle);
+        metro_center.addTransferStationNext(federal_triangle); // add metro_center next link for transfer (was missing -- see fix commit)
         federal_triangle.connect(smithsonian);
         smithsonian.makeEnd(); // to close the loop at the end station
         va_square.makeEnd();    // to close the loop at the other end station
@@ -109,4 +110,3 @@ public class MetroSimulator {
         return s1;
     }
 }
-
