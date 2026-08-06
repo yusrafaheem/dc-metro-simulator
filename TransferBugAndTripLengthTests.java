@@ -635,16 +635,16 @@ public class TransferBugAndTripLengthTests {
     }
 
     @Test
-    public void test_farragut_north_can_reach_metro_center_but_not_the_reverse() {
-        // Another instance of the same asymmetry pattern demonstrated
-        // earlier with McPherson Square, this time on the red line.
+    public void test_farragut_north_and_metro_center_can_now_reach_each_other() {
+        // Previously an asymmetry, like the McPherson Square case above --
+        // now symmetric in both directions.
         MetroSimulator.initialize();
         MetroSimulator.makeOrangeLine();
         MetroSimulator.makeRedLine();
         MetroSimulator.makePurpleLine();
 
         assertEquals(1, MetroSimulator.farragut_north.tripLength(MetroSimulator.metro_center));
-        assertEquals(-1, MetroSimulator.metro_center.tripLength(MetroSimulator.farragut_north));
+        assertEquals(1, MetroSimulator.metro_center.tripLength(MetroSimulator.farragut_north));
     }
 
     @Test
