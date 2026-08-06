@@ -275,21 +275,20 @@ public class TransferBugAndTripLengthTests {
     }
 
     @Test
-    public void test_a_full_cross_line_trip_through_metro_center_is_reported_unreachable() {
+    public void test_a_full_cross_line_trip_through_metro_center_now_returns_the_real_stop_count() {
         // Lab8Tester's test13 asserts va_square.tripLength(smithsonian) ==
         // 9 -- a real, walkable orange-line trip from one end to the
-        // other, passing straight through Metro Center. Running that
-        // assertion today would fail: because Metro Center's next/prev
-        // were overwritten by the purple line's wiring (the last line
-        // built), the orange line's own far half (Federal Triangle,
-        // Smithsonian) is unreachable from the Virginia Square side. This
-        // documents the actual, current return value instead.
+        // other, passing straight through Metro Center. That now matches:
+        // the transfer fix lets Metro Center reach back out through
+        // otherStations, and the missing addTransferStationNext(federal_triangle)
+        // call (a separate gap in MetroSimulator's own wiring) has been
+        // added so Federal Triangle and Smithsonian are reachable too.
         MetroSimulator.initialize();
         MetroSimulator.makeOrangeLine();
         MetroSimulator.makeRedLine();
         MetroSimulator.makePurpleLine();
 
-        assertEquals(-1, MetroSimulator.va_square.tripLength(MetroSimulator.smithsonian));
+        assertEquals(9, MetroSimulator.va_square.tripLength(MetroSimulator.smithsonian));
     }
 
     @Test
