@@ -1,6 +1,7 @@
 // TransferStation.java
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TransferStation extends Station {
 
@@ -22,6 +23,16 @@ public class TransferStation extends Station {
         otherStations.add(station);
     }
 
+    // Fix for the transfer bug: tripLengthHelper (in Station) now also
+    // walks whatever getTransferNeighbors() returns, and here that's
+    // otherStations -- the connections that got clobbered on this same
+    // object's own next/prev fields when a later line was wired through
+    // it are still reachable via this list.
+    @Override
+    protected List<Station> getTransferNeighbors() {
+        return otherStations;
+    }
+
     @Override
     public String toString() {
         String prevName = (prev == null) ? "none" : prev.name;
@@ -37,4 +48,3 @@ public class TransferStation extends Station {
         return sb.toString();
     }
 }
-
