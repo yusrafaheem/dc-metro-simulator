@@ -11,23 +11,26 @@ import static org.junit.Assert.assertTrue;
 // 1. Edge cases in the base Station/EndStation methods (null handling,
 //    equals() contract, makeEnd() idempotency).
 //
-// 2. A real, previously-undetected bug: TransferStation inherits connect()
-//    unchanged from Station, which just does `this.next = s`. Every time
-//    Metro Center is wired to a *second* line (red, then purple), that
-//    overwrites whichever next/prev pointer the *previous* line's wiring
-//    set -- last write wins. TransferStation.otherStations is supposed to
-//    hold the extra connections, but tripLength()/tripLengthHelper() is
-//    never overridden to actually walk that list, so those earlier
-//    connections become permanently unreachable from Metro Center's side.
-//    Concretely: on MetroSimulator's real network, nearly every trip that
-//    has to cross through Metro Center between two different lines comes
-//    back -1 (unreachable), even though Lab8Tester's own test13 asserts
-//    real stop-counts (9, 9, 4, 3) for exactly those trips. Running
-//    Lab8Tester today would fail on test9, test10, test12, and test13.
+// 2. A real bug this file originally found and documented, and that has
+//    since been fixed in Station.java/TransferStation.java/MetroSimulator.java:
+//    TransferStation never overrode tripLengthHelper() to walk otherStations,
+//    so any connection that got overwritten when a later line was wired
+//    through a shared transfer station (last write wins on next/prev) was
+//    permanently unreachable from that transfer station's own side. On
+//    MetroSimulator's real network this broke nearly every trip that had to
+//    cross through Metro Center between two different lines, contradicting
+//    Lab8Tester's own test13, which asserts real stop-counts for exactly
+//    those trips. A second, closely related gap in MetroSimulator.java's
+//    own wiring (a missing addTransferStationNext(federal_triangle) call)
+//    meant Federal Triangle and Smithsonian stayed unreachable from Metro
+//    Center even after the traversal fix, until that call was added too.
+//    The tests below that used to assert -1/"unreachable" for these trips
+//    have been updated to assert the real, now-correct stop counts.
 //
-// Verified by porting Station/EndStation/TransferStation's exact field
-// logic to Python and running it (no JDK is available in the environment
-// these tests were authored in) -- see the trace in the commit messages.
+// Verified by porting Station/EndStation/TransferStation/MetroSimulator's
+// exact field logic to Python and running it (no JDK is available in the
+// environment these tests were authored in) -- see the trace in the commit
+// messages.
 public class TransferBugAndTripLengthTests {
 
     @Test
