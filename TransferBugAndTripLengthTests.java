@@ -620,17 +620,18 @@ public class TransferBugAndTripLengthTests {
     }
 
     @Test
-    public void test_the_same_shaped_trip_on_the_red_line_through_metro_center_fails_since_red_was_overwritten() {
+    public void test_the_same_shaped_trip_on_the_red_line_through_metro_center_now_works_too() {
         // Same "two stops out, through Metro Center" shape as the
-        // purple-line trip above -- but red was overwritten by purple, so
-        // the identical pattern on the red line comes back unreachable
-        // instead of a real stop count.
+        // purple-line trip above -- red was overwritten by purple, but
+        // since Metro Center now consults otherStations, the identical
+        // pattern on the red line returns a real stop count too, not just
+        // the line that happened to be wired last.
         MetroSimulator.initialize();
         MetroSimulator.makeOrangeLine();
         MetroSimulator.makeRedLine();
         MetroSimulator.makePurpleLine();
 
-        assertEquals(-1, MetroSimulator.dupont_circle.tripLength(MetroSimulator.gallery_place));
+        assertEquals(3, MetroSimulator.dupont_circle.tripLength(MetroSimulator.gallery_place));
     }
 
     @Test
