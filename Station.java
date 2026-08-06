@@ -56,6 +56,15 @@ public class Station {
         return this.name.equals(s.name) && this.line.equals(s.line);
     }
 
+    // Extra neighbors beyond next/prev, used by tripLengthHelper below.
+    // Plain Station has none; TransferStation overrides this to expose
+    // otherStations, so a transfer point's connections that got clobbered
+    // by a later line's wiring (see TransferStation.java) are still
+    // reachable during pathfinding.
+    protected List<Station> getTransferNeighbors() {
+        return Collections.emptyList();
+    }
+
     // Recursive tripLength method without helper and no queues
     public int tripLength(Station dest) {
         if (this.equals(dest)) {
@@ -94,9 +103,21 @@ public class Station {
             visited.remove(prev);
         }
 
-        // No other stations to check here (transfers handled in TransferStation subclass)
+        // Check any extra transfer neighbors (empty for a plain Station,
+        // otherStations for a TransferStation -- fixes the bug where
+        // transfer connections overwritten in next/prev were permanently
+        // unreachable from the transfer station's own side).
+        for (Station other : getTransferNeighbors()) {
+            if (other != null && !visited.contains(other)) {
+                visited.add(other);
+                int dist = other.tripLengthHelper(dest, visited);
+                if (dist >= 0 && dist < minDist) {
+                    minDist = dist + 1;
+                }
+                visited.remove(other);
+            }
+        }
 
         return (minDist == Integer.MAX_VALUE) ? -1 : minDist;
     }
 }
-
