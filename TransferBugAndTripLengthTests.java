@@ -259,21 +259,19 @@ public class TransferBugAndTripLengthTests {
     }
 
     @Test
-    public void test_metro_center_cannot_reach_back_to_mcpherson_square_the_trip_is_asymmetric() {
-        // The other half of the previous test, and the clearest possible
-        // demonstration of the bug: tripLength between two adjacent real
-        // stations should be symmetric (1 stop either direction), but here
-        // it isn't. Metro Center's own next/prev only point at S4/S3 (the
-        // purple line, wired last) -- it has no direct pointer back to
-        // McPherson Square, and tripLength never consults otherStations to
-        // find one. So the *same pair of physically adjacent stations*
-        // reports 1 stop one way and "unreachable" the other way.
+    public void test_metro_center_can_now_reach_back_to_mcpherson_square_the_trip_is_symmetric() {
+        // Previously the clearest demonstration of the bug: tripLength
+        // between two adjacent real stations should be symmetric (1 stop
+        // either direction), and now it is. Metro Center's otherStations
+        // list is consulted during traversal, so it finds its way back to
+        // McPherson Square even though its own next/prev only point at
+        // S4/S3 (the purple line, wired last).
         MetroSimulator.initialize();
         MetroSimulator.makeOrangeLine();
         MetroSimulator.makeRedLine();
         MetroSimulator.makePurpleLine();
 
-        assertEquals(-1, MetroSimulator.metro_center.tripLength(MetroSimulator.mcpherson_square));
+        assertEquals(1, MetroSimulator.metro_center.tripLength(MetroSimulator.mcpherson_square));
     }
 
     @Test
